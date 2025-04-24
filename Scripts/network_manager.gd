@@ -17,7 +17,7 @@ func _ready() -> void:
 		_connect_client()
 
 func _create_server():
-	multiplayer_peer.create_server(port, max_clients, number_of_transfer_channels)
+	multiplayer_peer.create_server(port, , number_of_transfer_channels)
 	multiplayer.multiplayer_peer = multiplayer_peer
 	
 	multiplayer.peer_connected.connect(_on_peer_connected)
