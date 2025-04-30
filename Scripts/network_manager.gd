@@ -55,3 +55,8 @@ func _on_peer_disconnected(peer_id : int):
 
 func _on_connected_to_server():
 	print("Ive connected to the server")
+	_rpc.rpc_id(1)
+
+@rpc("any_peer", "call_local", "unreliable", 0)
+func _rpc():
+	print("I got called %s" % multiplayer.get_remote_sender_id())
