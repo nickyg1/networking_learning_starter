@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://jm2di4gti8v0"]
+[gd_scene load_steps=37 format=3 uid="uid://jm2di4gti8v0"]
 
 [ext_resource type="PackedScene" uid="uid://ckpi8kbrk7hlh" path="res://Assets/3D/World/Models/FBX format/tent-canvas-half.fbx" id="2_4uew4"]
 [ext_resource type="Texture2D" uid="uid://orq4ftrynw2c" path="res://Assets/Icons/Girl1.png" id="2_6cmjl"]
@@ -31,6 +31,7 @@
 [ext_resource type="PackedScene" uid="uid://h6iarh2hi8g" path="res://Assets/3D/World/Models/FBX format/grass-large.fbx" id="26_ml8by"]
 [ext_resource type="PackedScene" uid="uid://dkymv0tc4tjlx" path="res://Assets/3D/World/Models/FBX format/signpost.fbx" id="27_f4f62"]
 [ext_resource type="PackedScene" uid="uid://bju34m5buno5a" path="res://Scenes/Objects/girl_1.tscn" id="31_vao08"]
+[ext_resource type="Script" uid="uid://5ke4mtcsb681" path="res://Scripts/network_object.gd" id="32_1ovkb"]
 [ext_resource type="PackedScene" uid="uid://cxded1tn5eqcc" path="res://Scenes/Objects/CursorDot.tscn" id="32_35fht"]
 [ext_resource type="PackedScene" uid="uid://b6vbqutw05p8e" path="res://Scenes/Objects/camera.tscn" id="32_nve11"]
 
@@ -365,6 +366,7 @@ transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -3.18882, 0, -1.43196)
 transform = Transform3D(0.658309, 0, -0.752748, 0, 1, 0, 0.752748, 0, 0.658309, -3.3477, 0.338085, -2.5005)
 
 [node name="Girl 1" parent="." instance=ExtResource("31_vao08")]
+script = ExtResource("32_1ovkb")
 
 [node name="CharacterBody3D" parent="Girl 1" index="0"]
 cursor_dot = ExtResource("32_35fht")
