@@ -49,6 +49,7 @@ func _create_server():
 	
 	network_started = true
 	is_server = multiplayer.is_server()
+	network_id = multiplayer.get_unique_id();
 	connected_players.append(_create_connected_player(multiplayer.get_unique_id()))
 
 func _connect_client():
@@ -94,3 +95,13 @@ func _register_network_object(network_object : NetworkObject):
 		player.players_objects.append(network_object)
 	
 	print("added network object")
+
+func _switch_network_object(new_owner : int, network_object : NetworkObject):
+	if !is_instance_valid(network_object): return
+	
+	for player in connected_players:
+		if player.network_id == network_object.owner_id:
+			if player.players_objects.has(network_object):
+				player.players_objects.erase(network_object)
+		if player.network_id == new_owner:
+			player.players_objects.append(network_object)

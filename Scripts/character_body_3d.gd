@@ -5,6 +5,7 @@ extends CharacterBody3D
 @onready var body: Node3D = get_node("Body")
 @onready var body_ap: AnimationPlayer = get_node("Body/AnimationPlayer")
 @onready var network_manager : NetworkManager = get_node("/root/Network_Manager")
+@onready var network_object : NetworkObject = get_parent()
 @export var cursor_dot : PackedScene;
 
 var current_cursor_dot : MeshInstance3D = null
@@ -43,7 +44,7 @@ func _on_arrived_at_target():
 		current_cursor_dot.queue_free()
 
 func _input(event: InputEvent) -> void:
-	if !network_manager.multiplayer.is_server(): return
+	if !network_object._is_owner(): return
 	
 	if event is InputEventMouseButton && event.is_pressed():
 		if event.button_index != MOUSE_BUTTON_LEFT:
