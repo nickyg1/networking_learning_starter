@@ -28,20 +28,16 @@ var is_server : bool = false
 var network_started : bool = false
 
 signal on_server_started
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	var args : PackedStringArray = OS.get_cmdline_args()
-	
-	if args.has("server"):
-		# create server
-		_create_server()
-	else:
-		# connect client
-		_connect_client()
+signal on_connection_failed
 
 func _create_server():
-	multiplayer_peer.create_server(port)
+	var err : Error = multiplayer_peer.create_server(port)
+	
+	if err != OK:
+		printerr(err)
+		on_connection_failed.emit()
+		return
+	
 	multiplayer.multiplayer_peer = multiplayer_peer
 	
 	multiplayer.peer_connected.connect(_on_peer_connected)
@@ -51,9 +47,16 @@ func _create_server():
 	is_server = multiplayer.is_server()
 	network_id = multiplayer.get_unique_id();
 	connected_players.append(_create_connected_player(multiplayer.get_unique_id()))
+	on_server_started.emit()
 
 func _connect_client():
-	multiplayer_peer.create_client(ip, port)
+	var err : Error = multiplayer_peer.create_client(ip, port)
+	
+	if err != OK:
+		printerr(err)
+		on_connection_failed.emit()
+		return
+	
 	multiplayer.multiplayer_peer = multiplayer_peer
 	
 	multiplayer.connected_to_server.connect(_on_connected_to_server)

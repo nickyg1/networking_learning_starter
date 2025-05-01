@@ -1,5 +1,6 @@
-[gd_scene load_steps=37 format=3 uid="uid://jm2di4gti8v0"]
+[gd_scene load_steps=38 format=3 uid="uid://jm2di4gti8v0"]
 
+[ext_resource type="Script" uid="uid://bf6eb7s0p1xcw" path="res://Scripts/connection_menu.gd" id="1_4uew4"]
 [ext_resource type="PackedScene" uid="uid://ckpi8kbrk7hlh" path="res://Assets/3D/World/Models/FBX format/tent-canvas-half.fbx" id="2_4uew4"]
 [ext_resource type="Texture2D" uid="uid://orq4ftrynw2c" path="res://Assets/Icons/Girl1.png" id="2_6cmjl"]
 [ext_resource type="Texture2D" uid="uid://r7v60a3pkjlv" path="res://Assets/Icons/Girl2.png" id="3_vao08"]
@@ -57,10 +58,10 @@ offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="ConnectionMenu" type="Control" parent="UI"]
-visible = false
 anchors_preset = 0
 offset_right = 1152.0
 offset_bottom = 648.0
+script = ExtResource("1_4uew4")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="UI/ConnectionMenu"]
 layout_mode = 0
