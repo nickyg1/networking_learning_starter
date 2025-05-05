@@ -29,10 +29,6 @@ func _on_network_started():
 	
 	network_manager._register_network_object(self)
 	
-	#if !network_manager.is_server:
-		#_request_ownership.rpc_id(1)
-
-	
 	if network_manager.on_server_started.is_connected(_on_network_started):
 		network_manager.on_server_started.disconnect(_on_network_started)
 
@@ -93,15 +89,16 @@ func _change_owner(new_owner : int):
 	print("old owner: %s new owner: %s" % [owner_id, new_owner])
 	owner_id = new_owner
 
-@rpc("authority", "call_remote", "reliable")
+@rpc("authority", "call_local", "reliable")
 func _initialize_network_object(owner_id : int, transforms : Dictionary):
-	self.owner_id = owner_id
-	
-	var children_transforms := _get_all_children_transforms(self)
-	for child in children_transforms:
-		var child_path = child.get_path()
-		if transforms.has(child_path):
-			child.transform = transforms[child_path]
+	if !network_manager.is_server:
+		self.owner_id = owner_id
+		
+		var children_transforms := _get_all_children_transforms(self)
+		for child in children_transforms:
+			var child_path = child.get_path()
+			if transforms.has(child_path):
+				child.transform = transforms[child_path]
 	
 	on_network_ready.emit()
 

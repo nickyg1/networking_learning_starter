@@ -1,16 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://bju34m5buno5a"]
+[gd_scene load_steps=7 format=3 uid="uid://bju34m5buno5a"]
 
+[ext_resource type="Script" uid="uid://5ke4mtcsb681" path="res://Scripts/network_object.gd" id="1_mky3q"]
+[ext_resource type="PackedScene" uid="uid://cxded1tn5eqcc" path="res://Scenes/Objects/CursorDot.tscn" id="2_jncy0"]
 [ext_resource type="Script" uid="uid://dxi2n71ieh4xq" path="res://Scripts/character_body_3d.gd" id="2_mky3q"]
+[ext_resource type="PackedScene" uid="uid://b6vbqutw05p8e" path="res://Scenes/Objects/camera.tscn" id="3_mky3q"]
 [ext_resource type="PackedScene" uid="uid://7n10e7yy2sod" path="res://Assets/3D/Characters/Models/FBX format/character-female-f.fbx" id="4_i5yio"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_j1jxu"]
 
 [node name="Girl 1" type="Node"]
-metadata/_custom_type_script = "uid://cew7fvp54i334"
+script = ExtResource("1_mky3q")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.321566, 0.5, 0)
 script = ExtResource("2_mky3q")
+cursor_dot = ExtResource("2_jncy0")
+camera = ExtResource("3_mky3q")
 
 [node name="Body" parent="CharacterBody3D" instance=ExtResource("4_i5yio")]
 transform = Transform3D(-6.55671e-08, 0, -1.5, 0, 1.5, 0, 1.5, 0, -6.55671e-08, 0, -0.5, 0)

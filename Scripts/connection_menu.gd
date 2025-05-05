@@ -6,6 +6,7 @@ extends Control
 @onready var host_btn : Button = get_node("HostBtn")
 @onready var network_manager : NetworkManager = get_node("/root/Network_Manager")
 @onready var status_text : RichTextLabel = get_node("RichTextLabel")
+@onready var character_select_menu : Control = get_node("/root/Node3D/UI/CharacterSelectMenu")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -24,6 +25,7 @@ func _on_connected_to_server():
 		
 	
 	status_text.add_text(text)
+	character_select_menu.show()
 	hide()
 
 func _host():

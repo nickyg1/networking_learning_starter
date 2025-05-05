@@ -125,6 +125,7 @@ func _register_network_object(network_object : NetworkObject):
 	if !is_server && !network_object._is_owner():
 		return
 	
+	
 	if is_server:
 		network_object._initialize_network_object.rpc(network_object.owner_id, network_object._get_transforms())
 	
@@ -213,9 +214,9 @@ func _request_spawn_object(spawn_args : Dictionary):
 	
 	if validate_spawn_callable:
 		if validate_spawn_callable.call(request_id, spawn_args):
-			_network_spawn_object.rpc()
+			_network_spawn_object.rpc(request_id, spawn_args)
 	else:
-		_network_spawn_object.rpc()
+		_network_spawn_object.rpc(request_id, spawn_args)
 	
 
 @rpc("authority", "call_local", "reliable")
