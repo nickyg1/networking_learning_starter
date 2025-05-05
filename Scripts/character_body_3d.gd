@@ -1,40 +1,22 @@
-extends CharacterBody3D
+class_name PlayerCharacterBody extends CharacterBody3D
 
 @onready var navigation_agent: NavigationAgent3D = get_node("NavigationAgent3D")
 @onready var body: Node3D = get_node("Body")
 @onready var body_ap: AnimationPlayer = get_node("Body/AnimationPlayer")
-@onready var network_manager : NetworkManager = get_node("/root/Network_Manager")
 
 @export var movement_speed: float = 4.0
 @export var cursor_dot : PackedScene;
 @export var camera : PackedScene;
 
-var network_object : NetworkObject
 var current_cursor_dot : MeshInstance3D = null
 var my_camera : Camera3D
 
 func _ready() -> void:
 	navigation_agent.velocity_computed.connect(Callable(_on_velocity_computed))
 	navigation_agent.target_reached.connect(Callable(_on_arrived_at_target))
-	
-	network_object = get_parent() as NetworkObject
-	
-	if is_instance_valid(network_object):
-		network_object.on_network_ready.connect(_on_network_ready)
 
-func _on_network_ready():
-	print("network is ready")
-	if !network_object._is_owner(): return
-	
-	print("spawing camera")
-	my_camera = camera.instantiate()
-	add_child(my_camera)
-	
 
-@rpc("any_peer", "call_local", "unreliable")
 func set_movement_target(movement_target: Vector3):
-	if network_manager.multiplayer.get_remote_sender_id() != network_object.owner_id: return
-	
 	navigation_agent.set_target_position(movement_target)
 	body_ap.play("walk")
 
@@ -59,30 +41,3 @@ func _on_velocity_computed(safe_velocity: Vector3):
 
 func _on_arrived_at_target():
 	body_ap.play("idle")
-	if current_cursor_dot != null:
-		current_cursor_dot.queue_free()
-
-func _input(event: InputEvent) -> void:
-	if !is_instance_valid(my_camera) || !network_object._is_owner(): return
-	
-	if event is InputEventMouseButton && event.is_pressed():
-		if event.button_index != MOUSE_BUTTON_LEFT:
-			return
-		var mousePos = get_viewport().get_mouse_position()
-		var ray_origin = my_camera.project_ray_origin(mousePos)
-		var ray_end = ray_origin + my_camera.project_ray_normal(mousePos) * 5000
-		
-		var space_state = get_world_3d().direct_space_state
-		var intersection = space_state.intersect_ray(
-			PhysicsRayQueryParameters3D.create(ray_origin, ray_end))
-			
-		if !intersection.is_empty():
-			set_movement_target.rpc(intersection.position)
-			
-			if current_cursor_dot != null:
-				current_cursor_dot.queue_free()
-				
-			current_cursor_dot = cursor_dot.instantiate()
-			get_node("/root").add_child(current_cursor_dot)
-			current_cursor_dot.position = intersection.position
-		

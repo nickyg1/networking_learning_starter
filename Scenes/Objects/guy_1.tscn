@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://pbxwp3o5q4p4"]
 
-[ext_resource type="Script" uid="uid://5ke4mtcsb681" path="res://Scripts/network_object.gd" id="1_bb4o5"]
+[ext_resource type="Script" uid="uid://yx747xcjcoly" path="res://Scripts/character_network.gd" id="1_bb4o5"]
 [ext_resource type="PackedScene" uid="uid://cxded1tn5eqcc" path="res://Scenes/Objects/CursorDot.tscn" id="2_35ijh"]
 [ext_resource type="Script" uid="uid://dxi2n71ieh4xq" path="res://Scripts/character_body_3d.gd" id="2_bb4o5"]
 [ext_resource type="PackedScene" uid="uid://b6vbqutw05p8e" path="res://Scenes/Objects/camera.tscn" id="3_bb4o5"]
@@ -10,6 +10,7 @@
 
 [node name="Male 1" type="Node"]
 script = ExtResource("1_bb4o5")
+spawn_client_on_server = true
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.321566, 0.5, 0)
