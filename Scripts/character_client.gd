@@ -38,6 +38,7 @@ func _input(event: InputEvent) -> void:
 		var intersection = space_state.intersect_ray(
 			PhysicsRayQueryParameters3D.create(ray_origin, ray_end))
 			
+		character_network._send_input_ray.rpc_id(1, ray_origin, ray_end)
 		if !intersection.is_empty():
 			my_body.set_movement_target(intersection.position)
 			

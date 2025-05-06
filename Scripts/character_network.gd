@@ -8,6 +8,8 @@ signal on_player_input_recieved(ray_origin : Vector3, ray_end : Vector3)
 
 signal on_target_recieved(target : Vector3)
 
+var validate_player_input : Callable
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	on_network_ready.connect(_on_network_ready)
@@ -32,9 +34,13 @@ func _on_network_ready():
 
 @rpc("any_peer", "call_local", "unreliable")
 func _send_input_ray(ray_origin : Vector3, ray_end : Vector3):
-	if network_manager.multiplayer.get_remote_sender_id() != owner_id: return
-	
-	on_player_input_recieved.emit(ray_origin, ray_end)
+	if validate_player_input:
+		if validate_player_input.call(network_manager.multiplayer.get_remote_sender_id(), ray_origin, ray_end):
+			on_player_input_recieved.emit(ray_origin, ray_end)
+		else:
+			_set_target.rpc(my_body.position)
+	else:
+		on_player_input_recieved.emit(ray_origin, ray_end)
 
 @rpc("authority", "call_local", "unreliable")
 func _set_target(target : Vector3):
