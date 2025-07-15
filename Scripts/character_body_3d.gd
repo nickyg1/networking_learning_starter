@@ -16,9 +16,11 @@ func _ready() -> void:
 	
 	if args.has("server"):
 		#create server
+		_create_server()
 	else:
 		# connect client
-
+		_connect_client()
+	
 	navigation_agent.velocity_computed.connect(Callable(_on_velocity_computed))
 	navigation_agent.target_reached.connect(Callable(_on_arrived_at_target))
 
@@ -26,11 +28,22 @@ func _create_server():
 	multiplayer_peer.create_server(9999)
 	multiplayer.multiplayer_peer = multiplayer_peer
 	
-	multiplayer.peer_connected.connect()	
+	multiplayer.peer_connected.connect(_on_peer_connected)
+	
+func _connect_client():
+	multiplayer_peer.create_client("127.0.0.1", 9999)
+	multiplayer.multiplayer_peer = multiplayer_peer
+	
+	multiplayer.connected_to_server.connect(_on_connect_to_server)
 
 func _on_peer_connected(peer_id : int):
-	print("peer with id %s connected")
+	print("peer with id %s connected" % peer_id)
+
+func _on_connect_to_server():
+	print("I've connected to the server")
 	
+@rpc("any_peer", "call_local", "unreliable")
+
 func set_movement_target(movement_target: Vector3):
 	navigation_agent.set_target_position(movement_target)
 	body_ap.play("walk")
@@ -73,7 +86,7 @@ func _input(event: InputEvent) -> void:
 			PhysicsRayQueryParameters3D.create(ray_origin, ray_end))
 			
 		if !intersection.is_empty():
-			set_movement_target(intersection.position)
+			set_movement_target.rpc(intersection.position)
 			
 			if current_cursor_dot != null:
 				current_cursor_dot.queue_free()
