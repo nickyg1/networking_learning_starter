@@ -8,11 +8,29 @@ extends CharacterBody3D
 
 var current_cursor_dot : MeshInstance3D = null
 
+var multiplayer_peer = ENetMultiplayerPeer.new()
+
+
 func _ready() -> void:
+	var args : PackedStringArray = OS.get_cmdline_args()
+	
+	if args.has("server"):
+		#create server
+	else:
+		# connect client
+
 	navigation_agent.velocity_computed.connect(Callable(_on_velocity_computed))
 	navigation_agent.target_reached.connect(Callable(_on_arrived_at_target))
 
+func _create_server():
+	multiplayer_peer.create_server(9999)
+	multiplayer.multiplayer_peer = multiplayer_peer
+	
+	multiplayer.peer_connected.connect()	
 
+func _on_peer_connected(peer_id : int):
+	print("peer with id %s connected")
+	
 func set_movement_target(movement_target: Vector3):
 	navigation_agent.set_target_position(movement_target)
 	body_ap.play("walk")
