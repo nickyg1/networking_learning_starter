@@ -5,6 +5,8 @@ extends Node
 
 var owner_id : int = 1
 var has_begun_initialization : bool = false
+var resource_path : String = ""
+var spawn_args : Dictionary = {}
 
 var validate_ownership_change_callable : Callable
 var validate_destroy_request_callable : Callable
@@ -15,6 +17,8 @@ signal on_network_object_destroy()
 func _ready() -> void:
 	if !network_manager.network_started:
 		network_manager.on_server_started.connect(_on_network_started)
+	else:
+		_on_network_started()
 		
 func _on_network_started():
 	if has_begun_initialization:
@@ -78,25 +82,29 @@ func _request_onwership():
 @rpc("authority", "call_local", "reliable")
 
 func _change_owner(new_owner : int):
-	if network_manager.is_server|| new_owner == network_manager.network_id || owner_id == network_manager.network_id:
+	var is_server = network_manager.is_server
+	var is_new_owner = new_owner == network_manager.network_id
+	var is_old_owner = owner_id == network_manager.network_id
+
+	if is_server || is_new_owner || is_old_owner:
 		network_manager._switch_network_object(new_owner, self)
-	
+
 	on_ownership_change.emit(owner_id, new_owner)
 	print("old ownder : %s new owner: %s" % [owner_id, new_owner])
 	owner_id = new_owner
 
 
-@rpc("authority", "call_remote", "reliable")
-
+@rpc("authority", "call_local", "reliable")
 func _initialize_network_object(owner_id : int, transforms : Dictionary):
-	self.owner_id = owner_id
-	
-	var children_transforms : Array[Node] = _get_all_children_transform(self)
-	
-	for child in children_transforms:
-		var child_path = child.get_path()
-		if transforms.has(child_path):
-			child.transform = transforms[child_path]
+	if !network_manager.is_server:
+		self.owner_id = owner_id
+		
+		var children_transforms : Array[Node] = _get_all_children_transform(self)
+		
+		for child in children_transforms:
+			var child_path = child.get_path()
+			if transforms.has(child_path):
+				child.transform = transforms[child_path]
 			
 	on_network_ready.emit()
 

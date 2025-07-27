@@ -6,7 +6,7 @@ extends Control
 @export var host_button : Button
 @export var status_text : RichTextLabel
 @onready var network_manager : NetworkManager = get_node("/root/Network_Manager")
-
+@onready var character_select_menu : Control = get_node("/root/Node3D/UI/CharacterSelectMenu")
 
 
 func _ready() -> void:
@@ -22,6 +22,7 @@ func _on_connected_to_server():
 		text = "server"
 		
 	status_text.add_text(text)
+	character_select_menu.show()
 	hide()
 	
 func _host():
